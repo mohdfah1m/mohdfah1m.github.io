@@ -1,12 +1,13 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
 CORS(app)
 
 @app.route('/', methods=['GET'])
 def home():
-    return "Server is running"
+    return jsonify({"message": "Hycean Planet Analysis API is running", "status": "ok"})
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -128,7 +129,6 @@ def submit():
             else:
                 composition_output="The planet lacks essential elements for life"
 
-            
             return x, composition_output
 
         def Presence_of_water(self):
@@ -286,4 +286,6 @@ def submit():
         return jsonify({"error": str(e)}), 400
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    # Get port from environment variable (Render provides this)
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port, debug=False)
