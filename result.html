@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+    <title>Planet Analysis Results</title>
+    <style>
+        body {
+            background: url('./Background/Galaxy.gif') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 0;
+            overflow-y: auto;
+        }
+
+        .title-container {
+            position: relative;
+            height: 70px;
+            width: 100%;
+            padding: 15px 0;
+            text-align: center;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .title-container h1 {
+            color: white;
+            font-size: 50px;
+            margin: 0;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .result-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            width: 80%;
+            max-width: 800px;
+            padding: 25px;
+            margin-top: 50px;
+            margin-bottom: 50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .planet-name {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: cyan;
+        }
+
+        .habitability {
+            font-size: 24px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .hycean-status {
+            font-size: 28px;
+            margin: 20px 0;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .hycean-yes {
+            background-color: rgba(76, 175, 80, 0.3);
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
+        }
+
+        .hycean-no {
+            background-color: rgba(244, 67, 54, 0.3);
+            color: #F44336;
+            border: 2px solid #F44336;
+        }
+
+        .analysis-section {
+            width: 100%;
+            margin: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            padding-top: 20px;
+        }
+
+        .analysis-section h2 {
+            color: cyan;
+            margin-bottom: 15px;
+        }
+
+        .analysis-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .analysis-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #ccc;
+        }
+
+        .planet-details {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #ccc;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin: 10px 0 30px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 30px;
+            background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: width 1.5s ease-in-out;
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.7);
+        }
+
+        button {
+            margin-top: 30px;
+            background: cyan;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        button:hover {
+            background: #00bcd4;
+            transform: scale(1.05);
+        }
+
+        /* Custom planet image container - 400x400 at the top */
+        .planet-image-container {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 150, 255, 0.3);
+            margin: 20px auto;
+        }
+        
+        .planet-base-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .planet-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            border-radius: 50%;
+            mix-blend-mode: screen;
+        }
+        
+        /* Placeholder styles for missing images */
+        .placeholder-notice {
+            color: orange;
+            text-align: center;
+            font-style: italic;
+            margin: 10px 0;
+            display: none;
+        }
+    </style>
+</head> 
+<body>
+    <div class="title-container">
+        <h1>Planet Analysis</h1>
+    </div>
+    <div class="result-container">
+        <div class="planet-name" id="planetName">Planet Name</div>
+        
+        <!-- Custom Planet Image Container -->
+        <div class="planet-image-container" id="planetImageContainer">
+            <!-- Planet base image - will be set dynamically -->
+            <img id="planetBaseImage" class="planet-base-image" src="" alt="Planet Base">
+            
+            <!-- Overlays - will be set dynamically -->
+            <img id="waterOverlay" class="planet-overlay" style="display: none;" alt="Water Overlay">
+            <img id="atmosphereOverlay" class="planet-overlay" style="display: none;" alt="Atmosphere Overlay">
+            <img id="magneticOverlay" class="planet-overlay" style="display: none;" alt="Magnetic Overlay">
+            <img id="radiationOverlay" class="planet-overlay" style="display: none;" alt="Radiation Overlay">
+            <img id="temperatureOverlay" class="planet-overlay" style="display: none;" alt="Temperature Overlay">
+            <img id="elementsOverlay" class="planet-overlay" style="display: none;" alt="Elements Overlay">
+            <img id="moonOverlay" class="planet-overlay" style="display: none;" alt="Moon Overlay">
+        </div>
+        
+        <!-- Analysis Details Below Planet -->
+        <div class="progress-container">
+            <div id="progressBar" class="progress-bar" style="width: 0%">0%</div>
+        </div>
+        
+        <div id="habitabilityRate" class="habitability">Calculating habitability...</div>
+        
+        <div class="analysis-section">
+            <h2>Analysis Summary</h2>
+            <div id="analysisContainer">
+                <!-- Analysis items will be inserted here -->
+            </div>
+        </div>
+        
+        <div class="planet-details" id="planetDetails">
+            <!-- Details will be inserted here -->
+        </div>
+        
+        <button onclick="window.location.href='./index.html'">Create New Planet</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add error handling for missing images
+            document.querySelectorAll('.planet-overlay, #planetBaseImage').forEach(img => {
+                img.onerror = function() {
+                    this.style.display = 'none';
+                    document.getElementById('placeholderNotice').style.display = 'block';
+                };
+            });
+            
+            // Retrieve stored data
+            const planetData = JSON.parse(localStorage.getItem('planetData'));
+            const resultData = JSON.parse(localStorage.getItem('resultData'));
+            
+            if (planetData && resultData) {
+                // Display the planet name
+                document.getElementById('planetName').textContent = planetData.planet_name;
+                
+                // Display custom planet visualization
+                updatePlanetVisualization(planetData);
+                
+                // Display habitability
+                document.getElementById('habitabilityRate').textContent = resultData.habitability;
+                
+                // Animate progress bar
+                const progressBar = document.getElementById('progressBar');
+                const percentage = resultData.habitability_percentage || 0;
+                setTimeout(() => {
+                    progressBar.style.width = percentage + '%';
+                    progressBar.textContent = percentage + '%';
+                }, 200);
+                
+                // Display analysis items
+                const analysisContainer = document.getElementById('analysisContainer');
+                
+                if (resultData.analysis) {
+                    for (const [key, value] of Object.entries(resultData.analysis)) {
+                        if (value) {
+                            const item = document.createElement('div');
+                            item.className = 'analysis-item';
+                            
+                            const title = document.createElement('div');
+                            title.className = 'analysis-title';
+                            title.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+                            
+                            const content = document.createElement('div');
+                            content.textContent = value;
+                            
+                            item.appendChild(title);
+                            item.appendChild(content);
+                            analysisContainer.appendChild(item);
+                        }
+                    }
+                }
+                
+                // Display planet details
+                const detailsContainer = document.getElementById('planetDetails');
+                
+                // Create detail items
+                addDetailItem(detailsContainer, 'Mass', `${planetData.mass} Earth masses`);
+                addDetailItem(detailsContainer, 'Temperature', `${planetData.temperature}°C`);
+                addDetailItem(detailsContainer, 'Pressure', `${planetData.pressure} Pa`);
+                addDetailItem(detailsContainer, 'Elements', planetData.elements.join(', '));
+                addDetailItem(detailsContainer, 'Water Present', planetData.water);
+                addDetailItem(detailsContainer, 'Star Type', planetData.star);
+                addDetailItem(detailsContainer, 'Distance from Star', `${planetData.distance} AU`);
+                addDetailItem(detailsContainer, 'Moons', planetData.moons);
+                addDetailItem(detailsContainer, 'Magnetic Field', planetData.magnet);
+                addDetailItem(detailsContainer, 'Radiation Level', planetData.rads);
+            } else {
+                document.getElementById('habitabilityRate').textContent = 'No planet data found!';
+            }
+        });
+        
+        function addDetailItem(container, label, value) {
+            const item = document.createElement('div');
+            item.className = 'detail-item';
+            
+            const labelElement = document.createElement('span');
+            labelElement.className = 'detail-label';
+            labelElement.textContent = label + ':';
+            
+            const valueElement = document.createElement('span');
+            valueElement.className = 'detail-value';
+            valueElement.textContent = value;
+            
+            item.appendChild(labelElement);
+            item.appendChild(valueElement);
+            container.appendChild(item);
+        }
+        
+        function updatePlanetVisualization(planetData) {
+            // Select base planet image based on planetary characteristics
+            const baseImage = document.getElementById('planetBaseImage');
+            const mass = parseFloat(planetData.mass);
+            const elements = planetData.elements || [];
+            
+            // Choose base planet image based on radiation
+            if (planetData.rads === 'Low') {
+                baseImage.src = './planets/low_rad1.png';
+            } else if (planetData.rads === 'Medium') {
+                baseImage.src = './planets/medium_rad1.png';
+            } else if (planetData.rads === 'High') {
+                baseImage.src = './planets/high_rad1.png';
+            }
+            
+            // Water overlay
+            const waterOverlay = document.getElementById('waterOverlay');
+            if (planetData.water === 'Yes') {
+                waterOverlay.src = './planets/yes_water1.png';
+                waterOverlay.style.display = 'block';
+            }
+            
+            // Atmosphere overlay - based on number of elements
+            const atmosphereOverlay = document.getElementById('atmosphereOverlay');
+            const elementCount = elements.length;
+
+            if (elementCount >= 2) {
+                atmosphereOverlay.src = './planets/atmosphere1.png';
+                atmosphereOverlay.style.display = 'block';
+            }
+            
+            // Temperature overlay
+            const temperatureOverlay = document.getElementById('temperatureOverlay');
+            const temperature = parseFloat(planetData.temperature);
+            
+            if (temperature > 100) {
+                temperatureOverlay.src = './planets/very_hot1.png';
+                temperatureOverlay.style.display = 'block';
+            } else if (temperature < -20) {
+                temperatureOverlay.src = './planets/very_cold1.png';
+                temperatureOverlay.style.display = 'block';
+            }
+            
+            // Moon overlay
+            const moonOverlay = document.getElementById('moonOverlay');
+            const moons = parseInt(planetData.moons);
+
+            if (moons >= 1) {
+                moonOverlay.src = './planets/yes_moon1.png';
+                moonOverlay.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

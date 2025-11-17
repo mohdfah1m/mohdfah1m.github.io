@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+        <title>Project Hycean</title>
+        <style>
+        body {
+            background: url('./Background/Galaxy.gif') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 0;
+            overflow-y: auto;
+        }
+
+        .title-container {
+            position: relative;
+            height: 70px;
+            width: 100%;
+            padding: 15px 0;
+            text-align: center;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .title-container h1 {
+            color: white;
+            font-size: 50px;
+            margin: 0;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            width: 400px;
+            padding: 25px;
+            margin-top: 20px;
+            margin-bottom: 50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .input-container input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        button {
+            margin-top: 15px;
+            background: cyan;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        button:hover {
+            background: #00bcd4;
+            transform: scale(1.05);
+        }
+
+        fieldset {
+            border: 2px solid white;
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+        }
+
+        fieldset legend {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 10px;
+            gap: 20px;
+            justify-content: space-between;
+        }
+        .checkbox-group div{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .radio-group div {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+
+        .status-error {
+            background-color: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0000;
+            color: #ff6666;
+        }
+
+        .status-success {
+            background-color: rgba(0, 255, 0, 0.2);
+            border: 1px solid #00ff00;
+            color: #66ff66;
+        }
+    </style>
+    </head> 
+    <body>
+        <div class="title-container">
+            <h1>Build Your Planet</h1>
+        </div>
+        <div class="input-container">
+            <input type="text" id="name" placeholder="Enter Planet Name" required>
+            <input type="number" id="mass" placeholder="Enter mass of planet in Earth mass" required>
+            <input type="number" id="temperature" placeholder="Enter temperature in centigrade" required>
+            <input type="number" id="pressure" placeholder="Enter pressure in pascal" required>
+            <fieldset>
+                <legend>Choose elements present in planet:</legend>
+                <div class="checkbox-group">
+                    <div><input type="checkbox" id="H" name="H"/><label for="H">H</label></div>
+                    <div><input type="checkbox" id="O" name="O"/><label for="O">O</label></div>
+                    <div><input type="checkbox" id="C" name="C"/><label for="C">C</label></div>
+                    <div><input type="checkbox" id="N" name="N"/><label for="N">N</label></div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Is water present in your planet?</legend>
+                <div class="radio-group">
+                    <div><input type="radio" id="Yes" name="water" value="Yes" required/><label for="Yes">Yes</label></div>
+                    <div><input type="radio" id="No" name="water" value="No"/><label for="No">No</label></div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Enter type of star</legend>
+                <div class="radio-group">
+                    <div><input type="radio" id="Sun" name="star" value="Sun" required/><label for="Sun">Sun</label></div>
+                    <div><input type="radio" id="Red-Dwarfs" name="star" value="Red Dwarfs"/><label for="Red-Dwarfs">Red Dwarfs</label></div>
+                    <div><input type="radio" id="Blue-Giants" name="star" value="Blue Giants"/><label for="Blue-Giants">Blue Giants</label></div>
+                </div>
+            </fieldset>
+            <input type="number" id="distance" placeholder="Enter distance from star in AU" required>
+            <input type="number" id="moons" placeholder="Enter number of moons" required>
+            <fieldset>
+                <legend>Is magnetic field present on your planet?</legend>
+                <div class="radio-group">
+                    <div><input type="radio" id="MagYes" name="magnet" value="Yes" required/><label for="MagYes">Yes</label></div>
+                    <div><input type="radio" id="MagNo" name="magnet" value="No"/><label for="MagNo">No</label></div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Enter radiation level of planet</legend>
+                <div class="radio-group">
+                    <div><input type="radio" id="Low" name="rads" value="Low" required/><label for="Low">Low</label></div>
+                    <div><input type="radio" id="Medium" name="rads" value="Medium"/><label for="Medium">Medium</label></div>
+                    <div><input type="radio" id="High" name="rads" value="High"/><label for="High">High</label></div>
+                </div>
+            </fieldset>
+            <div id="statusMessage" class="status-message"></div>
+            <button type="submit">Submit</button>
+        </div>
+
+        <script>
+            document.querySelector("button").addEventListener("click", async function(event) {
+                event.preventDefault();
+                
+                // Get the status message element
+                const statusMessage = document.getElementById('statusMessage');
+                statusMessage.style.display = 'none';
+                statusMessage.className = 'status-message';
+                
+                // Collect form data
+                const formData = {
+                    planet_name: document.querySelector("#name").value,
+                    mass: parseFloat(document.querySelector("#mass").value) ,
+                    temperature: parseFloat(document.querySelector("#temperature").value) ,
+                    pressure: parseFloat(document.querySelector("#pressure").value) ,
+                    elements: [...document.querySelectorAll("input[type='checkbox']:checked")].map(el => el.name),
+                    water: document.querySelector("input[name='water']:checked")?.value ,
+                    star: document.querySelector("input[name='star']:checked")?.value ,
+                    distance: parseFloat(document.querySelector("#distance").value) ,
+                    moons: parseInt(document.querySelector("#moons").value) ,
+                    magnet: document.querySelector("input[name='magnet']:checked")?.value ,
+                    rads: document.querySelector("input[name='rads']:checked")?.value 
+                };
+                console.log("Form data to be sent:", JSON.stringify(formData, null, 2));
+                const requiredFields = ["planet_name", "mass", "temperature", "pressure", 
+                "water", "star", "distance", "moons", "magnet", "rads"];
+                const missingFields = requiredFields.filter(field => {
+                    if (field === "elements") {
+                        return formData[field].length === 0;
+                    }
+                    return !formData[field] && formData[field] !== 0;
+                });
+                if (missingFields.length > 0) {
+                    statusMessage.textContent = `Missing required fields: ${missingFields.join(", ")}`;
+                    statusMessage.className = 'status-message status-error';
+                    statusMessage.style.display = 'block';
+                    return;
+                }
+                
+                // Basic validation
+                if (!formData.planet_name || isNaN(formData.mass) || isNaN(formData.temperature) || 
+                    isNaN(formData.pressure) || isNaN(formData.distance) || isNaN(formData.moons)) {
+                    statusMessage.textContent = "Please fill in all required fields";
+                    statusMessage.className = 'status-message status-error';
+                    statusMessage.style.display = 'block';
+                    return;
+                }
+                
+                console.log("Sending form data:", formData);
+                statusMessage.textContent = "Processing...";
+                statusMessage.className = 'status-message';
+                statusMessage.style.display = 'block';
+                
+                try {
+                    // Use fetch with proper error handling
+                    const response = await fetch("http://localhost:8080/submit", {
+                        method: "POST",
+                        headers: { 
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify(formData),
+                        mode: "cors"  // Enable CORS
+                    });
+                    
+                    console.log("Response status:", response.status);
+                    
+                    if (response.status === 405) {
+                        throw new Error("Method not allowed. The server doesn't accept POST requests to this endpoint.");
+                    }
+                    
+                    if (!response.ok) {
+                        const errorText= await response.text();
+                        console.log("Server error details:", errorText);
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    
+                    // Process successful response
+                    const result = await response.json();
+                    console.log("Result:", result);
+            
+                    
+                    // Store data in localStorage
+                    localStorage.setItem('planetData', JSON.stringify(formData));
+                    localStorage.setItem('resultData', JSON.stringify(result));
+                    
+                    // Navigate to result page using direct URL
+                    window.location.href = './result.html';
+                    
+                } catch (error) {
+                    console.error("Fetch error:", error);
+                    statusMessage.textContent = "Error: " + error.message ;
+                    statusMessage.className = 'status-message status-error';
+                    statusMessage.style.display = 'block';
+                    
+                    
+                }
+            });
+        </script>
+    </body>
+</html>
